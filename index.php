@@ -32,7 +32,7 @@ $rok = date('Y');
                 <ul class="nav-list">
                     <li><a href="#uslugi" class="nav-link">Usługi</a></li>
                     <li><a href="#cennik" class="nav-link">Cennik</a></li>
-                    <li><a href="#kontakt" class="nav-link nav-cta">Kontakt</a></li>
+                    <li><a href="#kontakt" class="nav-link nav-cta">Kontakt</a></li> 
                 </ul>
             </nav>
         </div>
