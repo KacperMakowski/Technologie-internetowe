@@ -15,12 +15,20 @@ $rok = date('Y');
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="icon" type="image/svg+xml" href="static/logo-szprycha.svg">
+    <script src="js/app.js" defer></script>
 </head>
 <body>
     <header class="site-header">
         <div class="container">
+            <a href="#" class="logo">Szprycha<span class="logo-accent">.</span></a>
+            <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+                <svg class="hamburger-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line class="line line--top" x1="4" y1="6" x2="20" y2="6"></line>
+                    <line class="line line--mid" x1="4" y1="12" x2="20" y2="12"></line>
+                    <line class="line line--bot" x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
             <nav class="main-nav" aria-label="Główna nawigacja">
-                <a href="#" class="logo">Szprycha<span class="logo-accent">.</span></a>
                 <ul class="nav-list">
                     <li><a href="#uslugi" class="nav-link">Usługi</a></li>
                     <li><a href="#cennik" class="nav-link">Cennik</a></li>

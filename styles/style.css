@@ -215,12 +215,44 @@ section {
 
 .main-nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    min-height: 76px;
     gap: 1.5rem;
 }
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 70px;
+    padding: 0.75rem 1.5rem;
+}
 
+.menu-toggle {
+    display: none; 
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: var(--color-white);
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+    z-index: 100;
+}
+
+.menu-toggle:hover {
+    color: var(--color-primary);
+}
+
+.hamburger-icon {
+    display: block;
+    pointer-events: none; 
+}
+
+.hamburger-icon .line {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.35s var(--ease-out-expo), opacity 0.25s ease;
+}
 .logo {
     font-family: var(--font-heading);
     font-size: 1.75rem;
@@ -930,10 +962,51 @@ section {
 }
 
 @media (max-width: 600px) {
+    .site-header .container {
+        flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .menu-toggle[aria-expanded="true"] .line--top {
+        transform: translateY(6px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] .line--mid {
+        opacity: 0;
+    }
+
+    .menu-toggle[aria-expanded="true"] .line--bot {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+
     .main-nav {
+        display: flex;
         flex-direction: column;
-        padding: 1rem 0;
+        width: 100%;
         gap: 0.75rem;
+        padding: 0;
+
+        min-height: 0;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: max-height 0.4s var(--ease-out-expo),
+                    opacity 0.3s ease,
+                    transform 0.3s ease,
+                    padding 0.3s ease;
+    }
+
+    .main-nav.menu--open {
+        max-height: 260px;
+        opacity: 1;
+        transform: translateY(0);
+        padding: 1rem 0;
+        pointer-events: auto;
     }
 
     .nav-list {
