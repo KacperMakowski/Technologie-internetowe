@@ -1,6 +1,15 @@
 <?php
 $firma = 'Szyprycha';
 $rok = date('Y');
+$imie = $_GET['imie'] ?? 'Gościu';
+
+$cennik = [
+    ['nazwa' => 'Regulacja przerzutki (przód lub tył) + prostowanie haka', 'czas' => 'od ręki / 30 min', 'cena' =>  45],
+    ['nazwa' => 'Odpowietrzanie hamulca hydraulicznego (1 koło, z płynem)', 'czas' => '1 dzień roboczy', 'cena' => 75],
+    ['nazwa' => 'Wymiana dętki lub opony (wraz z kontrolą opaski i ciśnienia)', 'czas' => 'od ręki / 20 min', 'cena' => 35],
+    ['nazwa' => 'Konwersja kół na system bezdętkowy Tubeless (para, bez mleczka)', 'czas' => '1 dzień roboczy', 'cena' => 110],
+    ['nazwa' => 'Centrowanie koła z korekcją bicia bocznego i promieniowego', 'czas' => '1–2 dni robocze', 'cena' => 70],
+];
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +29,17 @@ $rok = date('Y');
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="#" class="logo">Szprycha<span class="logo-accent">.</span></a>
+            <a class="logo" href="#">
+                <svg viewBox="0 0 120 64" width="72" height="38" role="img" aria-labelledby="logo-tytul">
+                    <title id="logo-tytul">Szprycha</title>
+                    <circle cx="28" cy="42" r="18" fill="none" stroke="currentColor" stroke-width="3" />
+                    <circle cx="92" cy="42" r="18" fill="none" stroke="currentColor" stroke-width="3" />
+                    <polyline points="28,42 56,42 76,20 40,20 28,42" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    <polyline points="56,42 48,14 44,14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    <polyline points="76,20 92,42 84,12 80,12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span class="logo-text">Szprycha<span class="logo-accent">.</span></span>
+            </a>
             <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
                 <svg class="hamburger-icon" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <line class="line line--top" x1="4" y1="6" x2="20" y2="6"></line>
@@ -43,6 +62,7 @@ $rok = date('Y');
             <div class="container">
                 <div class="hero">
                     <div class="hero-content">
+                        <p class="greeting-badge hero-animate stagger-1">Cześć, <?= htmlspecialchars($imie) ?>!</p>
                         <span class="hero-badge hero-animate stagger-1">Twój lokalny warsztat w Bydgoszczy</span>
                         <h1 class="hero-animate stagger-2">Szprycha – Serwis Rowerowy Bydgoszcz</h1>
                         <p class="hero-description hero-animate stagger-3">
@@ -150,43 +170,33 @@ $rok = date('Y');
                                 </tr>
                             </thead>
                             <tbody>
+                            <?php foreach ($cennik as $usluga): ?>
                                 <tr>
-                                    <td>Regulacja przerzutki (przód lub tył) + prostowanie haka</td>
-                                    <td>od ręki / 30 min</td>
-                                    <td class="table-price">45 zł</td>
+                                    <td><?= htmlspecialchars($usluga['nazwa']) ?></td>
+                                    <td><?= htmlspecialchars($usluga['czas']) ?></td>
+                                    <td class="table-price"><?= $usluga['cena'] ?> zł</td>
                                 </tr>
-                                <tr>
-                                    <td>Odpowietrzanie hamulca hydraulicznego (1 koło, z płynem)</td>
-                                    <td>1 dzień roboczy</td>
-                                    <td class="table-price">75 zł</td>
-                                </tr>
-                                <tr>
-                                    <td>Wymiana dętki lub opony (wraz z kontrolą opaski i ciśnienia)</td>
-                                    <td>od ręki / 20 min</td>
-                                    <td class="table-price">35 zł</td>
-                                </tr>
-                                <tr>
-                                    <td>Konwersja kół na system bezdętkowy Tubeless (para, bez mleczka)</td>
-                                    <td>1 dzień roboczy</td>
-                                    <td class="table-price">110 zł</td>
-                                </tr>
-                                <tr>
-                                    <td>Centrowanie koła z korekcją bicia bocznego i promieniowego</td>
-                                    <td>1–2 dni robocze</td>
-                                    <td class="table-price">60–90 zł</td>
-                                </tr>
-                                <tr>
-                                    <td>Mycie napędu w myjce ultradźwiękowej + woskowanie łańcucha</td>
-                                    <td>1 dzień roboczy</td>
-                                    <td class="table-price">120 zł</td>
-                                </tr>
-                                <tr>
-                                    <td>Podstawowy serwis amortyzatora przedniego (komora powietrzna + dolne golenie)</td>
-                                    <td>2–3 dni robocze</td>
-                                    <td class="table-price">190 zł</td>
-                                </tr>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="pricing-chart-box scroll-animate">
+                        <h3>Wykres cen usług (zł)</h3>
+                        <div class="chart-wrapper">
+                            <svg viewBox="0 0 700 <?= count($cennik) * 44 + 30 ?>" class="pricing-chart" role="img" aria-label="Wykres cen usług">
+                                <?php 
+                                $max_cena = max(array_column($cennik, 'cena'));
+                                foreach ($cennik as $idx => $usluga): 
+                                    $y = $idx * 44 + 20;
+                                    $bar_w = round(($usluga['cena'] / $max_cena) * 320);
+                                ?>
+                                    <text x="0" y="<?= $y + 14 ?>" class="chart-label"><?= htmlspecialchars(mb_strimwidth($usluga['nazwa'], 0, 36, '...')) ?></text>
+                                    <rect x="290" y="<?= $y ?>" width="<?= $bar_w ?>" height="20" rx="4" class="chart-bar" />
+                                    <text x="<?= 290 + $bar_w + 10 ?>" y="<?= $y + 15 ?>" class="chart-val"><?= $usluga['cena'] ?> zł</text>
+                                <?php endforeach; ?>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
