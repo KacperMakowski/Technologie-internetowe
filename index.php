@@ -27,6 +27,23 @@ $cennik = [
     <script src="js/app.js" defer></script>
 </head>
 <body>
+    <!-- Szybki, elegancki ekran powitalny / loader -->
+    <div id="page-loader" class="page-loader" aria-hidden="true">
+        <div class="loader-content">
+            <svg class="loader-bike" viewBox="0 0 120 64" width="84" height="45">
+                <circle cx="28" cy="42" r="18" class="loader-wheel" />
+                <circle cx="92" cy="42" r="18" class="loader-wheel" />
+                <polyline points="28,42 56,42 76,20 40,20 28,42" class="loader-frame" />
+                <polyline points="56,42 48,14 44,14" class="loader-frame" />
+                <polyline points="76,20 92,42 84,12 80,12" class="loader-frame" />
+            </svg>
+            <div class="loader-text">
+                <span class="loader-title">SZPRYCHA<span>.</span></span>
+                <span class="loader-welcome">Witaj, <?= htmlspecialchars($imie) ?></span>
+            </div>
+            <div class="loader-bar"><span class="loader-progress"></span></div>
+        </div>
+    </div>
     <header class="site-header">
         <div class="container">
             <a class="logo" href="#">
@@ -62,7 +79,6 @@ $cennik = [
             <div class="container">
                 <div class="hero">
                     <div class="hero-content">
-                        <p class="greeting-badge hero-animate stagger-1">Cześć, <?= htmlspecialchars($imie) ?>!</p>
                         <span class="hero-badge hero-animate stagger-1">Twój lokalny warsztat w Bydgoszczy</span>
                         <h1 class="hero-animate stagger-2">Szprycha – Serwis Rowerowy Bydgoszcz</h1>
                         <p class="hero-description hero-animate stagger-3">
@@ -182,18 +198,56 @@ $cennik = [
                     </div>
 
                     <div class="pricing-chart-box scroll-animate">
-                        <h3>Wykres cen usług (zł)</h3>
+                        <div class="chart-header">
+                            <div>
+                                <span class="section-subtitle">Wizualizacja</span>
+                                <h3>Porównanie cen usług w serwisie</h3>
+                            </div>
+                            <span class="chart-live-badge"><span class="pulse-dot"></span> Podgląd live</span>
+                        </div>
                         <div class="chart-wrapper">
-                            <svg viewBox="0 0 700 <?= count($cennik) * 44 + 30 ?>" class="pricing-chart" role="img" aria-label="Wykres cen usług">
+                            <svg viewBox="0 0 720 <?= count($cennik) * 50 + 20 ?>" class="pricing-chart" role="img" aria-label="Wykres cen usług">
+                                <defs>
+                                    <linearGradient id="barGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#FFD100">
+                                            <animate attributeName="stop-color" values="#FFD100;#FFDF4A;#FF9E0B;#FFD100" dur="4s" repeatCount="indefinite" />
+                                        </stop>
+                                        <stop offset="100%" stop-color="#F59E0B">
+                                            <animate attributeName="stop-color" values="#F59E0B;#FFD100;#F59E0B" dur="4s" repeatCount="indefinite" />
+                                        </stop>
+                                    </linearGradient>
+
+                                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="3" result="blur" />
+                                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                    </filter>
+
+                                    <linearGradient id="shimmerGrad" x1="-100%" y1="0%" x2="200%" y2="0%">
+                                        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+                                        <stop offset="50%" stop-color="rgba(255,255,255,0.45)" />
+                                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                                        <animate attributeName="x1" from="-100%" to="100%" dur="2.8s" repeatCount="indefinite" />
+                                        <animate attributeName="x2" from="0%" to="200%" dur="2.8s" repeatCount="indefinite" />
+                                    </linearGradient>
+                                </defs>
+
                                 <?php 
                                 $max_cena = max(array_column($cennik, 'cena'));
                                 foreach ($cennik as $idx => $usluga): 
-                                    $y = $idx * 44 + 20;
+                                    $y = $idx * 50 + 15;
                                     $bar_w = round(($usluga['cena'] / $max_cena) * 320);
+                                    $delay = $idx * 0.12;
                                 ?>
-                                    <text x="0" y="<?= $y + 14 ?>" class="chart-label"><?= htmlspecialchars(mb_strimwidth($usluga['nazwa'], 0, 36, '...')) ?></text>
-                                    <rect x="290" y="<?= $y ?>" width="<?= $bar_w ?>" height="20" rx="4" class="chart-bar" />
-                                    <text x="<?= 290 + $bar_w + 10 ?>" y="<?= $y + 15 ?>" class="chart-val"><?= $usluga['cena'] ?> zł</text>
+                                    <g class="chart-row">
+                                        <text x="0" y="<?= $y + 16 ?>" class="chart-label"><?= htmlspecialchars(mb_strimwidth($usluga['nazwa'], 0, 34, '...')) ?></text>
+                                        <rect x="290" y="<?= $y ?>" width="320" height="22" rx="6" class="chart-bar-bg" />
+                                        
+                                        <rect x="290" y="<?= $y ?>" width="<?= $bar_w ?>" height="22" rx="6" fill="url(#barGradient)" class="chart-bar-fill" style="animation-delay: <?= $delay ?>s;" filter="url(#glow)" />
+                                        
+                                        <rect x="290" y="<?= $y ?>" width="<?= $bar_w ?>" height="22" rx="6" fill="url(#shimmerGrad)" class="chart-shimmer" />
+                                        
+                                        <text x="<?= 290 + $bar_w + 14 ?>" y="<?= $y + 16 ?>" class="chart-val" style="animation-delay: <?= $delay + 0.2 ?>s;"><?= $usluga['cena'] ?> zł</text>
+                                    </g>
                                 <?php endforeach; ?>
                             </svg>
                         </div>
